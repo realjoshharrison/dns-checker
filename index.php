@@ -131,19 +131,17 @@ try {
     <div class="col-md-8">
 
 
-      <div class="col-md-12">
         <div class="progress">
           <div class="progress-bar progress-bar-success" style="width: 0%">
-            10%
-          </div>
-          <div class="progress-bar progress-bar-warning" style="width: 0%">
-            10%
+            0%
           </div>
           <div class="progress-bar progress-bar-danger" style="width: 0%">
-            10%
+            0%
+          </div>
+          <div class="progress-bar progress-bar-warning" style="width: 0%">
+            0%
           </div>
         </div>
-      </div>
 
       <table class="table table-condensed">
         <tr>
