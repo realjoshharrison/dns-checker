@@ -1,9 +1,18 @@
 <?php
 
-$nodes_raw = file_get_contents('http://www.dns-lg.com/nodes.json');
-$nodes = json_decode($nodes_raw);
-$nodes = $nodes->nodes;
-$nodes_json = json_encode($nodes);
+require_once('lib/CURLRequest.php');
+
+$errors = array();
+
+try {
+  $req = new CURLRequest('http://www.dns-lg.com/nodes.json');
+  $nodes_raw = $req->get();
+  $nodes = json_decode($nodes_raw);
+  $nodes = $nodes->nodes;
+  $nodes_json = json_encode($nodes);
+} catch(CURLRequestException $e) {
+  $errors[] = '<strong>Oh noes!</strong> ' . $e->getCode() . ': ' . $e->__toString();
+}
 
 ?><!DOCTYPE html>
 <html lang="en">
@@ -43,10 +52,18 @@ $nodes_json = json_encode($nodes);
   <div class="container">
 
     <div class="col-md-12">
-
       <div class="page-header">
         <h1><span class="glyphicon glyphicon-globe"></span> DNS Propagation Checker</h1>
       </div>
+
+      <?php
+      if( ! empty($errors)) {
+        foreach($errors as $k=>$error) {
+          echo '<div class="alert alert-danger" role="alert">' . $error . '</div>';
+        }
+      }
+      ?>
+
     </div>
 
     <div class="col-md-4" id="toolbar">
@@ -135,12 +152,14 @@ $nodes_json = json_encode($nodes);
           <th>TTL</th>
         </tr>
         <?php
-        foreach($nodes as $node) {
-          echo '<tr id="' . $node->name . '">';
-          echo '<td width="175" class="country"><span data-toggle="tooltip" title="' . $node->operator . '">' . $node->country . ' ' . $node->name{3} . '</span></td>';
-          echo '<td class="result"></td>';
-          echo '<td width="50" class="ttl"></td>';
-          echo '</tr>';
+        if( ! empty($nodes)) {
+          foreach($nodes as $node) {
+            echo '<tr id="' . $node->name . '">';
+            echo '<td width="175" class="country"><span data-toggle="tooltip" title="' . $node->operator . '">' . $node->country . ' ' . $node->name{3} . '</span></td>';
+            echo '<td class="result"></td>';
+            echo '<td width="50" class="ttl"></td>';
+            echo '</tr>';
+          }
         }
         ?>
       </table>
@@ -152,10 +171,16 @@ $nodes_json = json_encode($nodes);
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
+  <?php
+  if( ! empty($nodes)) {
+  ?>
   <script src="js/app.js"></script>
   <script>
     DNSPC.app.query.setNodes(<?php echo $nodes_json; ?>);
     DNSPC.app.init();
   </script>
+  <?php
+  }
+  ?>
 </body>
 </html>
