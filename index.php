@@ -153,7 +153,7 @@ try {
         if( ! empty($nodes)) {
           foreach($nodes as $node) {
             echo '<tr id="' . $node->name . '">';
-            echo '<td width="175" class="country"><span data-toggle="tooltip" title="' . $node->operator . '">' . $node->country . ' ' . $node->name{3} . '</span></td>';
+            echo '<td width="175" class="country"><span data-toggle="tooltip" title="' . $node->operator . '">' . $node->country . ' ' . $node->name[3] . '</span></td>';
             echo '<td class="result"></td>';
             echo '<td width="50" class="ttl"></td>';
             echo '</tr>';
